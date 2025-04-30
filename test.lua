@@ -1,5 +1,7 @@
 Stack = {}
 
+Mem = {}
+
 function Push(x)
     table.insert(Stack, 1, x)
 end
@@ -10,40 +12,37 @@ end
 Inst = {
     push = function(x) Push(x) end,
     print = function() print(Pop()) end,
-    stadd = function() Push(Pop()+Pop()) end,
-    aradd = function(x, y) Push(x+y) end,
-    stsub = function() Push(Pop()-Pop()) end,
-    arsub = function(x, y) Push(x-y) end,
-    stmul = function() Push(Pop()*Pop()) end,
-    armul = function(x, y) Push(x*y) end,
-    stdiv = function() Push(Pop()/Pop()) end,
-    ardiv = function(x, y) Push(x/y) end,
+    add = function() Push(Pop()+Pop()) end,
+    sub = function() Push(Pop()-Pop()) end,
+    mul = function() Push(Pop()*Pop()) end,
+    div = function() Push(Pop()/Pop()) end,
+    ttswap = function() Push(table.remove(Stack, 2)) end,
+    topdupe = function(i) local x = Pop(); for n = 0, i do Push(x) end end,
+    popvar = function(name) Mem[name] = Pop() end,
+    setvar = function(m) local name = m[1]; local val = m[2]; Mem[name] = val end,
+    varcopy = function(name) Push(Mem[name]) end,
+
+
+
+
+
 }
 
 Program = {
-    {inst = "push", args = "hello"},
-    {inst = "print"}
+    {inst = "setvar", args = {"x", "hi"}},
+    {inst = "varcopy", args = "x"},
+    {inst = "print"},
 }
 
+function Switch(v, x)
+
+    Inst[v](Program[x].args)
+
+end
+
 for x = 1, #Program do
-    local z = Program[x]
-    local inst = z.inst
 
-    if inst == "push" then
-        Inst.push(z.args)
-    elseif inst == "print" then
-        Inst.print()
-    elseif inst == "stadd" then
-        Inst.stadd()
-    elseif inst == "aradd" then
-        Inst.aradd(z.args[1], z.args[2])
-    elseif inst == "stsub" then
-        Inst.stsub()
-    elseif inst == "arsub" then
-        Inst.aradd(z.args[1], z.args[2])
-    
-
-    end
+    Switch(Program[x].inst, x)
 
 end
 
