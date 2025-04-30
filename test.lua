@@ -12,6 +12,7 @@ end
 Inst = {
     push = function(x) Push(x) end,
     print = function() print(Pop()) end,
+    stread = function() Push(io.stdin:read()) end,
     add = function() Push(Pop()+Pop()) end,
     sub = function() Push(Pop()-Pop()) end,
     mul = function() Push(Pop()*Pop()) end,
@@ -21,16 +22,16 @@ Inst = {
     popvar = function(name) Mem[name] = Pop() end,
     setvar = function(m) local name = m[1]; local val = m[2]; Mem[name] = val end,
     varcopy = function(name) Push(Mem[name]) end,
-
-
+    
 
 
 
 }
 
 Program = {
-    {inst = "setvar", args = {"x", "hi"}},
-    {inst = "varcopy", args = "x"},
+    {inst = "push", args = "cat program. please say something and i will repeat it"},
+    {inst = "print"},
+    {inst = "stread"},
     {inst = "print"},
 }
 
