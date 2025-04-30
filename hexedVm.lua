@@ -28,24 +28,31 @@ Inst = {
         local proc = Mem[name]
         --func is {code}
         for x = 1, #proc do
-
-            Switch(proc[x].inst, x)
+            
+            Inst[proc[x].inst](proc[x].args)
         
         end
     end,
-    
+    stexe = function()
+        local code = Pop()
+        
+        for x = 1, #code do
+            Inst[code[x].inst](code[x].args)
+        end
+    end,
 }
 
 Program = {
-    {inst = "setvar", args = {"add2", {
-        {inst = "add"},
-    }}},
     
-    {inst = "push", args = 2},
-    {inst = "push", args = 2},
+    {inst = "push", args = 6},
+    {inst = "push", args = {
+        {inst = "push", args = 2},
+        {inst = "push", args = 2},
+        {inst = "add"},
+        {inst = "print"},
+    }},
 
-    {inst = "call", args = "add2"},
-    {inst = "print"},
+    {inst = "stexe"},
 }
 
 function Switch(v, x)
