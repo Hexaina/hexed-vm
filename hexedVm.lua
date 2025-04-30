@@ -50,7 +50,7 @@ Inst = {
     popvar = function(name) Mem[name] = Pop() end,
     setvar = function(m) local name = m[1]; local val = m[2]; Mem[name] = val end,
     varcopy = function(name) Push(Mem[name]) end,
-    delvar = function(name) table.remove(Mem[name]) end,
+    delvar = function(name) Mem[name] = nil end,
     call = function(name)
         
         local proc = Mem[name]
@@ -70,17 +70,19 @@ Inst = {
     end,
     loopfor = function(m)
         local i = m[2]
-        Mem[m[1]] = i
+        local name = m[1]
+        Mem[name] = i
         local max = m[3]
         local inc = m[4]
         local code = m[5]
 
         for i = i, max, inc do
+            Mem[m[1]] = i
             for x = 1, #code do
                 Inst[code[x].inst](code[x].args)
             end
-            Mem[m[1]] = i
         end
+        Mem[name] = nil
     end,
     stif = function(code)
         local bool = Pop()
@@ -108,12 +110,8 @@ Inst = {
 
 Program = {
     
-    {inst = "push", args = false},
-    {inst = "stifelse", args =  {{
-        {inst = "push", args = "hello"},
-        {inst = "print"},
-    }, {
-        {inst = "push", args = "bye"},
+    {inst = "loopfor", args = {"w", 0, 6, 1, {
+        {inst = "varcopy", args = "w"},
         {inst = "print"},
     }}},
 
