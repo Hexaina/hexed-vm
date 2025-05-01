@@ -46,7 +46,7 @@ Inst = {
     stxor = function() local x = Pop(); local y = Pop(); Push((x and not y) or (not x and y)) end,
     stxnor = function() local x = Pop(); local y = Pop(); Push((x and y) or (not x and not y)) end,
     ttswap = function() Push(table.remove(Stack, 2)) end,
-    topdupe = function(i) local x = Pop(); for n = 0, i do Push(x) end end,
+    stdupe = function(i) local x = Pop(); for n = 0, i do Push(x) end end,
     popvar = function(name) Mem[name] = Pop() end,
     setvar = function(m) local name = m[1]; local val = m[2]; Mem[name] = val end,
     varcopy = function(name) Push(Mem[name]) end,
@@ -76,11 +76,16 @@ Inst = {
     end,
     stvectorindex = function() local index = Pop(); local arr = Pop(); Push(arr); Push(arr.contents[index]) end,
     pushmap = function(m)
+        for k, _ in pairs(m) do
+            if type(k) == "number" then
+                error("Map keys must be non-numeric")
+            end
+        end
         local arr = {type = "map", contents = m}
         Push(arr)
     end,
     stmapget = function() local name = Pop(); local map = Pop(); Push(map); Push(map.contents[name]) end,
-    stmapset = function() local name = Push(); local val = Pop(); local map = Pop(); map.contents[name] = val; Push(map); end,
+    stmapset = function() local name = Pop(); local val = Pop(); local map = Pop(); map.contents[name] = val; Push(map); end,
     proccall = function(name)
         
         local proc = Mem[name]
@@ -90,6 +95,7 @@ Inst = {
             Inst[proc[x].inst](proc[x].args)
         
         end
+
     end,
     stexe = function()
         local code = Pop()
@@ -140,14 +146,17 @@ Inst = {
 
 Program = {
     
-    {inst = "pushvector", args = {1, 2, 3, 4, 5}},
-    {inst = "pushvector", args = {1, 2, 3, 4, 5}},
-    {inst = "addvector"},
-    {inst = "loopfor", args = {"inc", 1, 5, 1, {
-        {inst = "varcopy", args = "inc"},
-        {inst = "stvectorindex"},
-        {inst = "print"},
-    }}},
+    {inst = "pushmap", args = {name = "joe", hp = 100}},
+    {inst = "popvar", args = "player1"},
+    {inst = "varcopy", args = "player1"},
+    {inst = "push", args = "name"},
+    {inst = "stmapget"},
+    {inst = "print"},
+    {inst = "stdupe", args = 0},
+    {inst = "varcopy", args = "player1"},
+    {inst = "push", args = "hp"},
+    {inst = "stmapget"},
+    {inst = "print"},
 
 }
 
