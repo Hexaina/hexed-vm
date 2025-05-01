@@ -51,7 +51,31 @@ Inst = {
     setvar = function(m) local name = m[1]; local val = m[2]; Mem[name] = val end,
     varcopy = function(name) Push(Mem[name]) end,
     delvar = function(name) Mem[name] = nil end,
-    call = function(name)
+    pushvector = function(m)
+        local arr = {type = "vector", contents = m}
+        Push(arr)
+    end,
+    addvector = function()
+        local arr1 = Pop()
+        local arr2 = Pop()
+        if arr1.type == "vector" and arr2.type == "vector" then
+            local con1 = arr1.contents
+            local con2 = arr2.contents
+            local length = 0
+            if #con1 >= #con2 then length = #con1 else length = #con2 end
+            local arr = {}
+            for i = 1, length do
+                local x = con1[i] + con2[i]
+                table.insert(arr, x)
+            end
+            local fin = {type = "vector", contents = arr}
+            Push(fin)
+        else
+            error("addvector expects two vectors")
+        end
+    end,
+    stvectorindex = function() local index = Pop(); local arr = Pop(); Push(arr); Push(arr.contents[index]) end,
+    proccall = function(name)
         
         local proc = Mem[name]
         --func is {code}
@@ -110,8 +134,12 @@ Inst = {
 
 Program = {
     
-    {inst = "loopfor", args = {"w", 0, 6, 1, {
-        {inst = "varcopy", args = "w"},
+    {inst = "pushvector", args = {1, 2, 3, 4, 5}},
+    {inst = "pushvector", args = {1, 2, 3, 4, 5}},
+    {inst = "addvector"},
+    {inst = "loopfor", args = {"inc", 1, 5, 1, {
+        {inst = "varcopy", args = "inc"},
+        {inst = "stvectorindex"},
         {inst = "print"},
     }}},
 
