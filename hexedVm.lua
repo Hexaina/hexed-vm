@@ -80,7 +80,7 @@ Inst = {
         Push(arr)
     end,
     stmapget = function() local name = Pop(); local map = Pop(); Push(map); Push(map.contents[name]) end,
-    stmapset = function(name) local val = Pop(); local map = Pop(); map.contents[name] = val; Push(map); end,
+    stmapset = function() local name = Push(); local val = Pop(); local map = Pop(); map.contents[name] = val; Push(map); end,
     proccall = function(name)
         
         local proc = Mem[name]
