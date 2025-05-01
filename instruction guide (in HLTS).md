@@ -94,4 +94,14 @@ pops the top two values off the stack and pushes false if only one is true, and 
 
 ## stack manipulation
 
-# Under construction
+### ttswap/0
+swaps the top two values of the stack
+```{inst = "ttsawp"},```
+
+### topdupe/1
+dupelicates the top value of the stack equal to the input. passing 0 results in the top value being deleted
+```{inst ="topdupe", args = int},```
+
+## variables
+
+# under construction
