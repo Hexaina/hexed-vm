@@ -75,6 +75,12 @@ Inst = {
         end
     end,
     stvectorindex = function() local index = Pop(); local arr = Pop(); Push(arr); Push(arr.contents[index]) end,
+    pushmap = function(m)
+        local arr = {type = "map", contents = m}
+        Push(arr)
+    end,
+    stmapget = function() local name = Pop(); local map = Pop(); Push(map); Push(map.contents[name]) end,
+    stmapset = function(name) local val = Pop(); local map = Pop(); map.contents[name] = val; Push(map); end,
     proccall = function(name)
         
         local proc = Mem[name]
