@@ -107,6 +107,13 @@ Inst = {
             Inst[code[x].inst](code[x].args)
         end
     end,
+    stnewthread = function(name) local code = Pop(); Mem[name] = coroutine.create(function()
+        for x = 1, #code do
+            Inst[code[x].inst](code[x].args)
+        end
+    end) end,
+    threadpause = function() coroutine.yield() end,
+    threadresume = function(name) coroutine.resume(Mem[name]) end,
     loopfor = function(m)
         local i = m[2]
         local name = m[1]
@@ -145,6 +152,14 @@ Inst = {
             end
         end
     end,
+    stwhile = function(code)
+        local bool = Pop()
+        while bool do
+            for x = 1, #code do
+                Inst[code[x].inst](code[x].args)
+            end
+        end
+    end
 }
 
 function Switch(v, x)
