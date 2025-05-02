@@ -153,11 +153,13 @@ Inst = {
         end
     end,
     stwhile = function(code)
+        
         local bool = Pop()
         while bool do
             for x = 1, #code do
                 Inst[code[x].inst](code[x].args)
             end
+            bool = Pop()
         end
     end
 }
