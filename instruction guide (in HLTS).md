@@ -27,7 +27,7 @@ pops the top two values off the stack and pushes the sum
 ```{inst = "stadd"},```
 
 ### stsub/0
-pops the top two values off the stack and pushes the differnce (first pop is the left of the equation)
+pops the top two values off the stack and pushes the differnce (first pop is the right of the equation)
 ```{inst = "stsub"},```
 
 ### stmul/0
@@ -35,11 +35,11 @@ pops the top two values off the stack and pushes the product
 ```{inst = "stmul"},```
 
 ### stdiv/0
-pops the top two values off the stack and pushes the quotient (pushes a floating point number, first pop is the left of the equation)
+pops the top two values off the stack and pushes the quotient (pushes a floating point number, first pop is the right of the equation)
 ```{inst = "stdiv"},```
 
 ### stmod/0
-pops the top two values off the stack and pushes the remainder (first pop is the left of the equation)
+pops the top two values off the stack and pushes the remainder (first pop is the right of the equation)
 ```{inst = "stmod"},```
 
 ## boolian oporations
