@@ -1,3 +1,6 @@
+local filename = arg[1] or "program.hxlt.lua"
+Program = dofile(filename)
+
 Stack = {}
 
 Mem = {}
@@ -14,29 +17,29 @@ Inst = {
     print = function() print(Pop()) end,
     stread = function() Push(io.stdin:read()) end,
     add = function() Push(Pop()+Pop()) end,
-    sub = function() Push(Pop()-Pop()) end,
+    sub = function() local x = Pop(); local y = Pop(); Push(y-x) end,
     mul = function() Push(Pop()*Pop()) end,
-    div = function() Push(Pop()/Pop()) end,
-    mod = function() Push(Pop()%Pop()) end,
+    div = function() local x = Pop(); local y = Pop(); Push(y/x) end,
+    mod = function() local x = Pop(); local y = Pop(); Push(y%x) end,
     stequal = function() 
         local x = Pop(); 
         local y = Pop(); 
-        if x == y then Push(true) else Push(false) end
+        if y == x then Push(true) else Push(false) end
     end,
     stnotequal = function() 
         local x = Pop(); 
         local y = Pop(); 
-        if x ~= y then Push(true) else Push(false) end
+        if y ~= x then Push(true) else Push(false) end
     end,
     stgreater = function() 
         local x = Pop(); 
         local y = Pop(); 
-        if x > y then Push(true) else Push(false) end
+        if y > x then Push(true) else Push(false) end
     end,
     stless = function() 
         local x = Pop(); 
         local y = Pop(); 
-        if x < y then Push(true) else Push(false) end
+        if y < x then Push(true) else Push(false) end
     end,
     stand = function() Push(Pop() and Pop()) end,
     stor = function() Push(Pop() or Pop()) end,
@@ -144,22 +147,6 @@ Inst = {
     end,
 }
 
-Program = {
-    
-    {inst = "pushmap", args = {name = "joe", hp = 100}},
-    {inst = "popvar", args = "player1"},
-    {inst = "varcopy", args = "player1"},
-    {inst = "push", args = "name"},
-    {inst = "stmapget"},
-    {inst = "print"},
-    {inst = "stdupe", args = 0},
-    {inst = "varcopy", args = "player1"},
-    {inst = "push", args = "hp"},
-    {inst = "stmapget"},
-    {inst = "print"},
-
-}
-
 function Switch(v, x)
 
     Inst[v](Program[x].args)
@@ -171,4 +158,3 @@ for x = 1, #Program do
     Switch(Program[x].inst, x)
 
 end
-
