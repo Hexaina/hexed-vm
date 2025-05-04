@@ -50,6 +50,7 @@ Inst = {
     stxnor = function() local x = Pop(); local y = Pop(); Push((x and y) or (not x and not y)) end,
     ttswap = function() Push(table.remove(Stack, 2)) end,
     stdupe = function(i) local x = Pop(); for n = 0, i do Push(x) end end,
+    stclear = function() Stack = {} end,
     popvar = function(name) Mem[name] = Pop() end,
     setvar = function(m) local name = m[1]; local val = m[2]; Mem[name] = val end,
     varcopy = function(name) Push(Mem[name]) end,
