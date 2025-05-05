@@ -2,8 +2,13 @@ HLTS, or HexedvmLuaTableSyntax is currently the only way to write hexedVm instru
 we will go over their structure and how to write it
 
 ## 1 - where to write HLTS
-to write HLTS, you will need a copy of the hexedVm lua source
-you will be writing HLTS in the "Program" table
+to write HLTS, make a .hxlt.lua file, then do
+```
+return {
+
+}
+```
+then put your code in that
 
 ## 2 - structure
 the structure of all HLTS instructions is as follows

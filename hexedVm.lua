@@ -92,11 +92,11 @@ Inst = {
     stmapset = function() local name = Pop(); local val = Pop(); local map = Pop(); map.contents[name] = val; Push(map); end,
     proccall = function(name)
         
-        local proc = Mem[name]
+        local code = Mem[name]
         --func is {code}
-        for x = 1, #proc do
+        for x = 1, #code do
             
-            Inst[proc[x].inst](proc[x].args)
+            Inst[code[x].inst](code[x].args)
         
         end
 
