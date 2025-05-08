@@ -5,11 +5,29 @@ Stack = {}
 
 Mem = {}
 
+Screen = {}
+for i, 60 do
+    Screen[i] = {}
+    for z, 60 do
+        Screen[i][z] = false
+    end
+end
+
 function Push(x)
     table.insert(Stack, 1, x)
 end
 function Pop()
     return table.remove(Stack, 1)
+end
+function scrToggle(x,y)
+    if Screen[x][y] then
+        Screen[x][y] = false
+    else
+        Screen[x][y] = true
+    end
+end
+function srcSet(x,y,bool)
+    Screen[x][y] = bool
 end
 
 Inst = {
@@ -161,6 +179,22 @@ Inst = {
                 Inst[code[x].inst](code[x].args)
             end
             bool = Pop()
+        end
+    end
+    stpixeltoggle = function() scrToggle(Pop(),Pop()) end
+    stpixelset = function(bool) scrSet(Pop(),Pop(),bool) end
+    pushtile = function(m) Push({type = tile, contents = m}) end
+    strendertile = function()
+        local tile = Pop()
+        if tile.type == "tile" then
+            tile = tile.contents
+            local y = Pop()
+            local x = Pop()
+            for x, v in ipairs(tile) do
+                for y, z in ipairs(tile[x])
+                    scrSet(x,y,tile[x][y])
+                end
+            end
         end
     end
 }
