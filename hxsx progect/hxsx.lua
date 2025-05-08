@@ -33,11 +33,31 @@ end
 
 function parse(tokens)
     local out = {}
+    local temp = {}
+    local inex = false
+    local first = true
     for index, token in ipairs(tokens) do
-        local tab = {inst = token}
-        table.insert(out, tab)
+        if token == "[" then
+            inex = true
+        elseif token == "]" then
+            inex = false
+            table.insert(out, temp)
+            temp = {}
+        else
+            if first == true then 
+                temp.inst = token
+            else
+                if #temp < 2 then
+                    temp.args = token
+                else
+                    local args = {temp.args}
+                    local tokentable = {token}
+                    table.insert(args, tokentable)
+                    temp.args = args
+                end
+            end
+        end
     end
-
     return out
 end
 
@@ -45,9 +65,52 @@ function comp(inp)
     return parse(tokenise(inp))
 end
 
-things = comp("[push 'hi'][print]")
-for x, thing in ipairs(things) do
-    for z, thingx in ipairs(thing) do
-        print(thingx)
+
+
+-- Function to convert a table to a string representation
+local function tableToString(tbl)
+    local result = "{\n"
+    for k, v in pairs(tbl) do
+        if type(k) == "string" then
+            result = result .. string.format("  [%q] = ", k) -- Quote string keys
+        else
+            result = result .. string.format("  [%d] = ", k) -- Numeric keys
+        end
+
+        if type(v) == "table" then
+            result = result .. tableToString(v) -- Recursive call for nested tables
+        elseif type(v) == "string" then
+            result = result .. string.format("%q", v) -- Quote string values
+        else
+            result = result .. tostring(v) -- Convert other types to string
+        end
+
+        result = result .. ",\n"
     end
+    result = result .. "}"
+    return result
 end
+-- Function to write the table to a Lua file
+local function writeTableToFile(filename, tbl)
+    local file = io.open(filename, "w") -- Open the file in write mode
+    if not file then
+        error("Could not open file for writing: " .. filename)
+    end
+
+    -- Write the table to the file
+    file:write("return " .. tableToString(tbl))
+    file:close()
+end
+
+filename = arg[1]
+local file = io.open(filename, "r")
+if not file then
+    print("Could not open file")
+    return
+end
+
+Program = file:read("*all")
+
+Program = comp(Program)
+
+writeTableToFile("out.hxlt.lua", Program)
