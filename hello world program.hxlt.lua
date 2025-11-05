@@ -1,6 +1,3 @@
-return{
-
-    {inst = "push", args = "hello world"},
-    {inst = "print"},
-
-}
+[main
+    [print "hello world"]
+]
